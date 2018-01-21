@@ -42,4 +42,4 @@ var Location = function(data, type, color) {
 	this.markerId = data.markerId;
 	this.type = type;
 	this.color = color;
-}
+};
