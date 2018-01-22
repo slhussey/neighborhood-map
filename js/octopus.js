@@ -188,7 +188,7 @@ function populateInfoWindow(marker, infowindow) {
         });
 
         var url = 'https://www.zillow.com/webservice/GetSearchResults.htm?zws-id=';
-        url += 'X1-ZWz1g74vy96iob_adn99';
+        url += "Your API Key for Zillow"; //url += 'X1-ZWz1g74vy96iob_adn99';
         url += '&address=' + homes[marker.id - 1 - locations.length].address;
         url += '&citystatezip=' + homes[marker.id - 1 - locations.length].cityStateZip;
 
