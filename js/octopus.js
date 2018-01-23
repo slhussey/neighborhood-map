@@ -187,7 +187,7 @@ function populateInfoWindow(marker, infowindow) {
             infowindow.marker = null;
         });
 
-        var url = 'https://www.zillow.com/webservice/GetSearchResults.htm?zws-id=';
+        var url = 'https://cors-anywhere.herokuapp.com/www.zillow.com/webservice/GetSearchResults.htm?zws-id=';
         url += 'X1-ZWz1g74vy96iob_adn99';
         url += '&address=' + homes[marker.id - 1 - locations.length].address;
         url += '&citystatezip=' + homes[marker.id - 1 - locations.length].cityStateZip;
