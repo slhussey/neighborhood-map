@@ -24,3 +24,7 @@ function toggleBounce(marker) {
          }) (marker);
     }
 }
+
+function failToLoadGoogleMapAPI() {
+    $('#map').html('<h1>Map library failed to load</h1>');
+}

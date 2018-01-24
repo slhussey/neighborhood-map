@@ -46,7 +46,7 @@ function getLocations() {
                     coords.push(results[0].geometry.location);
                     if (coords.length == homes.length) {
                         createMarkers(coords);
-                        ko.applyBindings(new myView());
+                        ko.applyBindings(new MyView());
                     }
                 } else {
                     window.alert('Error from geocode API (' + status + ') address: ' + addr)
@@ -129,7 +129,7 @@ function makeMarkerIcon(markerColor) {
 }
 
 // Knockout binding function
-var myView = function () {
+var MyView = function () {
     var self = this;  // retain MyViewModel 'this' to use in the inner function below
 
     this.locationList = ko.observableArray([]);
@@ -168,7 +168,10 @@ var myView = function () {
     self.bounceMarker = function(item) {
         marker = markers[item.markerId];
         toggleBounce(marker);
-        populateInfoWindow(marker, infoWindow);
+        
+        if (item.markerId > locations.length) {
+            populateInfoWindow(marker, infoWindow);
+        }
     }
 }
 
@@ -215,11 +218,11 @@ function populateInfoWindow(marker, infowindow) {
                     '<br>See more details on <a href="' + url + '">Zillow</a></div>');
 
               } else {
-                console.log('Failed to make server-side call. Check your configuaration and console.');
+                infowindow.setContent('<div>Failed to make Zillow API call.</div>');
               }
             },
             error: function(error) {
-                console.log(error);
+                infowindow.setContent('<div>Failed to make Zillow API call.<br>' + error + '</div>');
             }
           })
         
