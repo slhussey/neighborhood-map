@@ -72,6 +72,7 @@ function createMarkers(coords) {
                     id: i+1});
 
         marker.addListener('click', function() {
+            populateInfoWindow(this, infoWindow);
             toggleBounce(this);
         });
 
@@ -106,7 +107,7 @@ function createMarkers(coords) {
                     id: i+1+locations.length});
 
         marker.addListener('click', function() {
-            populateInfoWindow(this, infoWindow);
+            populateInfoWindowFromZillow(this, infoWindow);
             toggleBounce(this);
         });
 
@@ -134,6 +135,7 @@ var MyView = function () {
 
     this.locationList = ko.observableArray([]);
     this.filter = ko.observable({type: 'all', color: 'all'});
+    this.visibleMenu = ko.observable(false);
 
     locations.forEach(function(location) {
         self.locationList().push(new Location(location, 'site', 'blue'));
@@ -169,16 +171,26 @@ var MyView = function () {
         marker = markers[item.markerId];
         toggleBounce(marker);
         
-        if (item.markerId > locations.length) {
+        if (item.markerId > locations.length)
+            populateInfoWindowFromZillow(marker, infoWindow);
+        else
             populateInfoWindow(marker, infoWindow);
-        }
+        
+    }
+
+    self.menuClick = function () {
+        this.visibleMenu(!this.visibleMenu());
+        if (this.visibleMenu())
+            $('#map').css({'z-index':'-1'});
+        else
+            $('#map').css({'z-index':'0'});
     }
 }
 
 // This function populates the infowindow when the marker or list item is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindowFromZillow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
@@ -232,4 +244,24 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
+function populateInfoWindow(marker, infowindow) {
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+        infowindow.marker = marker;
+        //infowindow.setContent('<div>' + marker.title + '</div>');
+        //infowindow.open(map, marker);
+
+        // Make sure the marker property is cleared if the infowindow is closed.
+        infowindow.addListener('closeclick', function () {
+            infowindow.marker = null;
+        });
+
+                
+        infowindow.setContent('<div>Zestimate value not available for sites: ' + locations[marker.id - 1].name + '</div>');
+        
+
+        // Open the infowindow on the correct marker.
+        infowindow.open(map, marker);
+    }
+}
 
